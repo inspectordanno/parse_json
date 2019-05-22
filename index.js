@@ -27,13 +27,13 @@ const returnSelectedView = async (selector) => {
 }
 
 //create io
-readline.createInterface({
+const io = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 })
 
 //ask for input selector and execute returnSelectedView() based on the selector provided
-readline.question(`What selector do you want?`, (selector) => {
+io.question(`What selector do you want?`, (selector) => {
   returnSelectedView(selector);
   readline.close()
 })
