@@ -8,26 +8,28 @@ const returnSelectedView = async (selector) => {
     const response = await fetch('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json');
     const json = await response.json(); 
   
-    //these are the views that will be returned
+    // these are the views that will be returned
     const views = [];
 
-    const getView = (obj) => {
-      //for each view in the object, check if it matches the selector. if it does, push it to the views array
-      obj.subviews.forEach(() => {
-        if (obj['class'] === selector || obj['classNames'] === selector || obj['identifier'] === selector) {
+    const getView = (subviews) => {
+      //iterate through each subview in the subviews array . 
+      subviews.forEach((subview) => {
+        // check if it matches the selector
+        if (subview.class === selector || subview.classNames === selector || subview.identifier === selector) {
+        // if the subview matches the selector, push it to the views array  
         views.push(obj);
-      }
-        //if there is child subview within the current subview object, recursively call getView() with the child subView object
-        if (obj.subviews) {
-          getView(obj.subviews);
+         //if there is child subview within the current subview object, recursively call getView() with the child subView object
+         if (subview.subviews) {
+          getView(subview.subviews);
         }
+      }
       });
     }
     //runs getView for the first time
-    getView(json);
+    getView(json.subviews);
 
     //returns the array of all views
-    return views;
+    console.log(views);
 
   } catch (err) {
     console.log(err);
