@@ -12,7 +12,7 @@ const returnSelectedView = async (selector) => {
     const views = [];
 
     //determine what type of selector the user wants
-    let selectorType;
+    let selectorType = '';
     if (selector[0] === '.') {
       selectorType = 'className';
     } else if (selector[0] === '#') {
@@ -51,7 +51,20 @@ const returnSelectedView = async (selector) => {
           iterateViews(subview);
         });
       }
+
+      if (currentView.contentView) {
+        currentView.contentView.subviews.forEach(subview => {
+          selectSubView(subview);
+          iterateViews(subview);
+        });
+      }
     }
+
+    //optional refactor
+    // const selectAndIterateViews = (subview) => {
+    //   selectSubView(subview);
+    //   iterateViews(subview);
+    // }
 
     //run getView for the first time with the JSON object
     iterateViews(json);
@@ -59,8 +72,9 @@ const returnSelectedView = async (selector) => {
     //return the views to the user
     return views;
 
-
-  } catch (err) {
+  }
+  
+  catch (err) {
     console.log(err);
   }
 }
@@ -69,11 +83,14 @@ const returnSelectedView = async (selector) => {
 const io = readline.createInterface({
   input: process.stdin,
   output: process.stdout
-})
+});
 
 //ask for input selector and execute returnSelectedView() based on the selector provided
-io.question(`What selector do you want?`, (selector) => {
-  returnSelectedView(selector);
+io.question(`Type in a selector to return the corresponding view. `, (selector) => {
+  returnSelectedView(selector).then((views) => {
+    console.log(`There are ${views.length} subviews associated with the ${selector} selector.`);
+    console.log(views);
+  });
   io.close()
-})
+});
 
