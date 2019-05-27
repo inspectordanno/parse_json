@@ -2,9 +2,9 @@ const readline = require('readline'); //gets user input
 const fetch = require('node-fetch'); //node implemenation of fetch api
 
 //this is an async function that returns a json promise object
-export const getJson = async () => {
+export const getJSON = async (jsonURL) => {
   try {
-    const apiResponse = await fetch('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json');
+    const apiResponse = await fetch(jsonURL);
     return apiResponse.json();
   } catch (err) {
     console.log(err);
@@ -22,7 +22,7 @@ export const getSelectorType = (selector) => {
   }
 }
 
-const getSelectorSubviews = (selector, selectorType, json) => {
+export const getSelectorSubviews = (selector, selectorType, json) => {
   //initialize array of views that will be returned
   let views = [];
 
@@ -84,7 +84,7 @@ const io = readline.createInterface({
 const main = () => {
   //asks for input selector
   io.question(`Type in a selector to return the corresponding view. `, async (selector) => {
-    const json = await getJson(); //gets json promise object
+    const json = await getJSON('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json'); //gets json promise object
     const selectorType = getSelectorType(selector); //determines the selector type
     const subviews = getSelectorSubviews(selector, selectorType, json); //gets the subviews
     console.log(`There are ${subviews.length} subviews associated with the ${selector} selector.`);

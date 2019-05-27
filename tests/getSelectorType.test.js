@@ -1,4 +1,4 @@
-import { getSelectorType } from '../index.js';
+import { getSelectorType } from '../index';
 
 test('should return className selector type', () => {
   const classSelector = getSelectorType('.');
