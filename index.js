@@ -2,7 +2,7 @@ const readline = require('readline'); //gets user input
 const fetch = require('node-fetch'); //node implemenation of fetch api
 
 //this is an async function that returns a json promise object
-const getJson = async () => {
+export const getJson = async () => {
   try {
     const apiResponse = await fetch('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json');
     return apiResponse.json();
@@ -12,7 +12,7 @@ const getJson = async () => {
 }
 
 //determines the type of selector provided based on the user input
-const getSelectorType = (selector) => {
+export const getSelectorType = (selector) => {
   if (selector === '.') {
     return 'className';
   } else if (selector === '#') {
@@ -50,7 +50,6 @@ const getSelectorSubviews = (selector, selectorType, json) => {
   }
   
   const iterateViews = (currentView) => {
-
     //if the current view has a subViews array, for each subview, select the subviews and push them to the array, and recursively call iterateReviews() down the tree
     if (currentView.subviews) {
       currentView.subviews.forEach(subview => {

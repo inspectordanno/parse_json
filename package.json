@@ -4,7 +4,8 @@
   "description": "querying a json object with node",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "jest"
   },
   "keywords": [
     "node",
@@ -14,6 +15,10 @@
   "author": "Dan Spector",
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
     "node-fetch": "^2.6.0"
   }
