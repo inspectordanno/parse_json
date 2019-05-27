@@ -1,82 +1,78 @@
 const readline = require('readline'); //gets user input
 const fetch = require('node-fetch'); //node implemenation of fetch api
 
-//async function gets json promise object, and gets the view based on a selector
-const returnSelectedView = async (selector) => {
+//this is an async function that returns a json promise object
+const getJson = async () => {
   try {
-    //returns a json promise object
-    const response = await fetch('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json');
-    const json = await response.json(); 
-
-    //initialize array of views that will be returned
-    const views = [];
-
-    //determine what type of selector the user wants
-    let selectorType = '';
-    if (selector[0] === '.') {
-      selectorType = 'className';
-    } else if (selector[0] === '#') {
-      selectorType = 'identifier';
-    } else {
-      selectorType = 'class';
-    }
-
-    //selector logic - determines if the program will return subview based on the selector provided
-    const selectSubView = (subview) => {
-      switch (selectorType) {
-        case 'class':
-          if (subview.class && subview.class === selector) {
-            views.push(subview);
-          }
-        break;
-  
-        case 'className': 
-          if (subview.classNames && subview.classNames.includes(selector.slice(1))) {
-            views.push(subview);
-          }
-        break;
-  
-        case 'identifier':
-          if (subview.identifier && subview.identifier === selector.slice(1)) {
-            views.push(subview);
-          }
-        break;
-      }
-    }
-    
-    const iterateViews = (currentView) => {
-      if (currentView.subviews) {
-        currentView.subviews.forEach(subview => {
-          selectSubView(subview);
-          iterateViews(subview);
-        });
-      }
-
-      if (currentView.contentView) {
-        currentView.contentView.subviews.forEach(subview => {
-          selectSubView(subview);
-          iterateViews(subview);
-        });
-      }
-    }
-
-    //optional refactor
-    // const selectAndIterateViews = (subview) => {
-    //   selectSubView(subview);
-    //   iterateViews(subview);
-    // }
-
-    //run getView for the first time with the JSON object
-    iterateViews(json);
-
-    //return the views to the user
-    return views;
-
-  }
-  
-  catch (err) {
+    const apiResponse = await fetch('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json');
+    return apiResponse.json();
+  } catch (err) {
     console.log(err);
   }
+}
+
+//determines the type of selector provided based on the user input
+const getSelectorType = (selector) => {
+  if (selector === '.') {
+    return 'className';
+  } else if (selector === '#') {
+    return 'identifier';
+  } else {
+    return 'class';
+  }
+}
+
+const getSelectorSubviews = (selector, selectorType, json) => {
+  //initialize array of views that will be returned
+  let views = [];
+
+  //selector logic - determines if the program will return subview based on the selectorType
+  const selectSubView = (subview) => {
+    switch (selectorType) {
+      case 'class':
+        if (subview.class && subview.class === selector) {
+          views.push(subview);
+        }
+      break;
+
+      case 'className': 
+        if (subview.classNames && subview.classNames.includes(selector.slice(1))) {
+          views.push(subview);
+        }
+      break;
+
+      case 'identifier':
+        if (subview.identifier && subview.identifier === selector.slice(1)) {
+          views.push(subview);
+        }
+      break;
+    }
+  }
+  
+  const iterateViews = (currentView) => {
+
+    //if the current view has a subViews array, for each subview, select the subviews and push them to the array, and recursively call iterateReviews() down the tree
+    if (currentView.subviews) {
+      currentView.subviews.forEach(subview => {
+        selectSubView(subview);
+        iterateViews(subview);
+      });
+    }
+
+    //if the current view has a contentView array, iterate among the subviews
+    if (currentView.contentView) {
+      currentView.contentView.subviews.forEach(subview => {
+        selectSubView(subview);
+        iterateViews(subview);
+      });
+    }
+  }
+
+  // initial function call to recrusively traverse the JSON object
+  iterateViews(json);
+
+  //return the views that match the selector
+  return views;
 }
 
 //create io
@@ -85,12 +81,17 @@ const io = readline.createInterface({
   output: process.stdout
 });
 
-//ask for input selector and execute returnSelectedView() based on the selector provided
-io.question(`Type in a selector to return the corresponding view. `, (selector) => {
-  returnSelectedView(selector).then((views) => {
-    console.log(`There are ${views.length} subviews associated with the ${selector} selector.`);
-    console.log(views);
-  });
-  io.close()
-});
 
+const main = () => {
+  //asks for input selector
+  io.question(`Type in a selector to return the corresponding view. `, async (selector) => {
+    const json = await getJson(); //gets json promise object
+    const selectorType = getSelectorType(selector); //determines the selector type
+    const subviews = getSelectorSubviews(selector, selectorType, json); //gets the subviews
+    console.log(`There are ${subviews.length} subviews associated with the ${selector} selector.`);
+    console.log(subviews); //logs the subviews to the screen
+    io.close();
+  });
+};
+
+main();
