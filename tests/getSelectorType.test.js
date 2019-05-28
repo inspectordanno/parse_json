@@ -1,8 +1,10 @@
 import { getSelectorType } from '../index';
 
+//these tests confirm that the getSelectorType() helper function is mapping user input to the selectors in the object
+
 test('should return className selector type', () => {
-  const classSelector = getSelectorType('.');
-  expect(classSelector).toBe('className');
+  const classNameSelector = getSelectorType('.');
+  expect(classNameSelector).toBe('className');
 });
 
 test('should return identifier selector type', () => {
