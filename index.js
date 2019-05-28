@@ -103,7 +103,7 @@ const main = () => {
     const selectorType = getSelectorType(selector); //determines the selector type
     const subviews = getSelectorSubviews(selector, selectorType, json); //gets the subviews
     console.log(subviews); //logs the subviews to the screen
-    console.log(`There are ${subviews.length} views associated with the ${selector} selector.`);
+    console.log(`${subviews.length} ${subviews.length === 1 ? 'view': 'views'} associated with the ${selector} selector.`);
     io.close();
   });
 };
