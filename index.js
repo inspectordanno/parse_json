@@ -50,7 +50,7 @@ export const getSelectorSubviews = (selector, selectorType, json) => {
   }
   
   const iterateViews = (currentView) => {
-    
+
     //control object, determines if the program will push a control object to the views array
     const selectControl = (currentView) => {
       //if the current view has a control object, determine if it matches the selector and then push the object to the array 
@@ -102,8 +102,8 @@ const main = () => {
     const json = await getJSON('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json'); //gets json promise object
     const selectorType = getSelectorType(selector); //determines the selector type
     const subviews = getSelectorSubviews(selector, selectorType, json); //gets the subviews
-    console.log(`There are ${subviews.length} subviews associated with the ${selector} selector.`);
     console.log(subviews); //logs the subviews to the screen
+    console.log(`There are ${subviews.length} subviews associated with the ${selector} selector.`);
     io.close();
   });
 };
