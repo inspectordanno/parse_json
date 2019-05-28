@@ -98,7 +98,7 @@ const io = readline.createInterface({
 
 const main = () => {
   //asks for input selector
-  io.question(`Type in a selector to return the corresponding view. `, async (selector) => {
+  io.question(`Type in a selector to return the corresponding views. `, async (selector) => {
     const json = await getJSON('https://raw.githubusercontent.com/jdolan/quetoo/master/src/cgame/default/ui/settings/SystemViewController.json'); //gets json promise object
     const selectorType = getSelectorType(selector); //determines the selector type
     const subviews = getSelectorSubviews(selector, selectorType, json); //gets the subviews
