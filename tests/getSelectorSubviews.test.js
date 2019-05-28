@@ -1,74 +1,22 @@
 import { getJSON, getSelectorSubviews } from '../index';
 
-const fixture = {
-  "subviews": [
-    {
-      "class": "StackView",
-      "classNames": [
-        "container"
-      ],
-      "subviews": [
-        {
-          "class": "StackView",
-          "classNames": [
-            "columns",
-            "container"
-          ],
-          "subviews": [
-            {
-              "class": "StackView",
-              "classNames": [
-                "column",
-                "container"
-              ],
-              "subviews": [
-                {
-                  "class": "Box",
-                  "label": {
-                    "text": {
-                      "text": "Display"
-                    }
-                  },
-                  "contentView": {
-                    "subviews": [
-                      {
-                        "class": "Input",
-                        "label": {
-                          "text": {
-                            "text": "Video mode"
-                          }
-                        },
-                        "control": {
-                          "class": "VideoModeSelect",
-                          "identifier": "videoMode"
-                        }
-                      },
-                      {
-                        "class": "Input",
-                        "label": {
-                          "text": {
-                            "text": "High DPI (4K)"
-                          }
-                        },
-                        "control": {
-                          "class": "CvarCheckbox",
-                          "var": "r_allow_high_dpi"
-                        }
-                      }              
-                    ]
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-      
-it('should return three StackViews', async () => {
+const fixture = 'https://raw.githubusercontent.com/inspectordanno/parse_json/master/tests/fixture.json';
+
+it('should return two views with a class of Input', async () => {
   const json = await getJSON(fixture);
-  const views = getSelectorSubviews('StackView', 'class', json);
+  const views = getSelectorSubviews('Input', 'class', json);
+  expect(views).toHaveLength(2);
+});
+
+it('should return three views with a className of container', async () => {
+  const json = await getJSON(fixture);
+  const views = getSelectorSubviews('.container', 'className', json);
   expect(views).toHaveLength(3);
 });
+
+it('should return one view with an identifier of videoMode', async () => {
+  const json = await getJSON(fixture);
+  const views = getSelectorSubviews('#videoMode', 'identifier', json);
+  expect(views).toHaveLength(1);
+});
+

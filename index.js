@@ -13,9 +13,9 @@ export const getJSON = async (jsonURL) => {
 
 //determines the type of selector provided based on the user input
 export const getSelectorType = (selector) => {
-  if (selector === '.') {
+  if (selector[0] === '.') {
     return 'className';
-  } else if (selector === '#') {
+  } else if (selector[0] === '#') {
     return 'identifier';
   } else {
     return 'class';
@@ -50,6 +50,21 @@ export const getSelectorSubviews = (selector, selectorType, json) => {
   }
   
   const iterateViews = (currentView) => {
+    
+    //control object, determines if the program will push a control object to the views array
+    const selectControl = (currentView) => {
+      //if the current view has a control object, determine if it matches the selector and then push the object to the array 
+      if (currentView.control) {
+        if (selectorType === 'class' && currentView.control.class === selector.slice(1)) {
+          views.push(currentView.control);
+        } else if (selectorType === 'identifier' && currentView.control.identifier === selector.slice(1)) {
+          views.push(currentView.control);
+        }
+      }
+    }
+
+    selectControl(currentView);
+
     //if the current view has a subViews array, for each subview, select the subviews and push them to the array, and recursively call iterateReviews() down the tree
     if (currentView.subviews) {
       currentView.subviews.forEach(subview => {
