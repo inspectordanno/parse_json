@@ -13,7 +13,6 @@
     "fetch"
   ],
   "author": "Dan Spector",
-  "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
